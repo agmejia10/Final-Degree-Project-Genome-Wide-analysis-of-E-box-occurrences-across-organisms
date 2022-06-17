@@ -42,7 +42,7 @@ ebox <- function(seq, chr, actual_window = 1, window_size) {
       end = positions$start + 5,
       ebox = eboxes) # sapply(eboxes, function(x){substring(x, first = 3, last = 8)})
     # internal = sapply(eboxes, function(x){substring(x, first = 5, last = 6)}),
-    # flank5 = sapply(eboxes, function(x){substring(x, first = 1, last = 2)}), # tal como está puesto no descomentar, da información falsa, los dos primeros nucleotidos de la ebox
+    # flank5 = sapply(eboxes, function(x){substring(x, first = 1, last = 2)}), 
     # flank3 = sapply(eboxes, function(x){substring(x, first = 9, last = 10)}))
   }
 }
