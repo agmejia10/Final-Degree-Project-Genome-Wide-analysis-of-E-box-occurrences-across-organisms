@@ -203,3 +203,41 @@ median(a_meliffera$ratio)
 
 wilcox.test(d_melanogaster$ratio, a_meliffera$ratio)
 
+# Wilcoxon Pairwise of only cacgtg
+kruskal.test(cacgtg$ratio ~ cacgtg$specie)
+x <- pairwise.wilcox.test(cacgtg$ratio, cacgtg$specie, p.adjust.method = "fdr")
+
+tabla <- x$p.value %>% log(10)
+tabla <- -tabla
+write.csv(tabla, "../pvalues_cacgtg_wilcoxon_pairwise.csv")
+
+# Heatmap of -log10(pvalue)
+
+tabla[is.infinite(tabla)] <- 300
+
+cairo_pdf("../heatmap1 cacgtg.pdf", width = 7, height = 5)
+pheatmap::pheatmap(tabla, cluster_rows = F,
+                   cluster_cols = F)
+dev.off()
+
+cairo_pdf("../heatmap2 cacgtg.pdf", width = 7, height = 5)
+pheatmap::pheatmap(tabla, cluster_rows = F,
+                   cluster_cols = F,
+                   color = c("darkblue", "red"),
+                   breaks = c(0, -log10(0.05)))
+dev.off()
+
+orden <- c('S.cerevisiae', 'C.elegans', 'D.melanogaster','A.mellifera',
+           'D.rerio', 'X.tropicalis', 'G.gallus', 'Didelphidae', 'C.familiaris', 'S.scrofa', 'M.musculus', 'M.fascicularis', 'Pongo', 'Gorilla', 'P.troglodytes', 'H.sapiens')
+
+colores = c("Non-methylating" = "#8CC7A1", "Methylating" = "#92374D")
+
+p7 <- ggplot(all_results, aes(x = specie, y = log2(ratio_dimer), fill=methylated)) + 
+  geom_boxplot() + 
+  ggtitle("Boxplot distribution of the dimer across whole-genome") + 
+  scale_fill_manual(values = colores) + 
+  theme_pubr() +
+  scale_x_discrete(limits = orden) + coord_flip()
+  theme(axis.text.x = )
+
+ggsave('../boxplot_dimer.pdf', plot=p7, height=9, width=16)
